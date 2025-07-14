@@ -71,19 +71,14 @@ railway up
    - Build Command: `pip install -r requirements.txt`
    - Start Command: `gunicorn --bind 0.0.0.0:$PORT backend.app:app`
 
-## Option 5: Local Network Deployment
+## Option 5: Local Development
 
-For internal use, run locally with external access:
+For development and testing:
 
 ```powershell
-# Install ngrok
-winget install ngrok
-
-# Run your app
+# Run your app locally
 python backend/app.py
-
-# In another terminal, expose it
-ngrok http 8000
+# Access at http://localhost:8000
 ```
 
 ## Option 6: Docker Local Deployment
@@ -99,7 +94,7 @@ docker run -p 8000:8000 volvo-dmc-generator
 ## Recommendation
 
 1. **For corporate use**: Request Azure permissions (Option 1)
-2. **For quick testing**: Use ngrok (Option 5)
-3. **For public deployment**: Use Heroku or Render (Options 2-4)
+2. **For development**: Use local development (Option 5)
+3. **For cloud deployment**: Use Render or Railway (Options 2-4)
 
 Choose the option that best fits your needs!
