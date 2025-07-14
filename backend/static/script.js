@@ -1,4 +1,5 @@
-let BASE = "https://28b2008bd60f.ngrok-free.app"; // Change if deployed elsewhere
+let BASE = ""; // Automatically resolves to current domain
+fetch(`/login`)
 
 async function login() {
   const username = document.getElementById("username").value;

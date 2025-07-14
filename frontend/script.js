@@ -1,4 +1,5 @@
-let BASE = "https://56e8-170-102-114-138.ngrok-free.app"; // Change if deployed elsewhere
+let BASE = "";
+fetch(`/login`)
 
 async function login() {
   const username = document.getElementById("username").value;

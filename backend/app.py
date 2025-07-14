@@ -11,6 +11,7 @@ CORS(app)
 
 # 🔒 Robust path handling
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(os.path.dirname(BASE_DIR), "frontend")
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "qrs")
 LOG_FILE = os.path.join(BASE_DIR, "database.json")
 
@@ -25,7 +26,12 @@ if not os.path.exists(LOG_FILE):
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return send_from_directory(FRONTEND_DIR, "index.html")
+
+@app.route("/<path:filename>")
+def serve_static_files(filename):
+    return send_from_directory(FRONTEND_DIR, filename)
+
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -144,4 +150,5 @@ def download_pdf():
     return send_file(pdf_file, as_attachment=True)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=8000)
+
