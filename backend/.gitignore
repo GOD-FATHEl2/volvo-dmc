@@ -1,0 +1,32 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+.Python
+
+# Flask instance folder
+instance/
+.env
+.env.*
+
+# VS Code settings
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Log files
+*.log
+
+# Excel/PDF exports (optional)
+*.xlsx
+*.pdf
