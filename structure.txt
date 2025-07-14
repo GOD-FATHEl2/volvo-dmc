@@ -1,0 +1,16 @@
+qrstylegen/
+│
+├── backend/
+│   ├── app.py                  # Flask server
+│   ├── database.json           # Logs previous QR codes
+│   ├── generate_qr.py          # QR generation logic
+│   └── static/
+│       └── qrs/                # Saved QR codes
+│
+├── frontend/
+│   ├── index.html              # Login and Main UI
+│   ├── style.css               # Apple-style theme
+│   └── script.js               # Frontend logic
+│
+├── requirements.txt            # Python dependencies
+└── README.md

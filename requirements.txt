@@ -1,0 +1,10 @@
+flask
+qrcode
+pillow
+fpdf
+pandas
+openpyxl
+Pillow
+pylibdmtx
+numpy
+setuptools
