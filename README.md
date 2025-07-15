@@ -1,4 +1,4 @@
-# VOLVO DMC Generator (Datamatrix Creator)
+# VOLVO DMC Generator (Data Matrix Code)
 
 En modern mobilvänlig app för att generera och exportera unika DMC-koder (Data Matrix Codes) för industriellt bruk.
 
@@ -29,7 +29,6 @@ En modern mobilvänlig app för att generera och exportera unika DMC-koder (Data
    ```bash
    pip install flask pylibdmtx reportlab openpyxl
    ```
-
 
 ## 👤 Skapad av
 

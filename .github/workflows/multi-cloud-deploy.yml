@@ -34,8 +34,9 @@ jobs:
     - name: Test application
       run: |
         source venv/bin/activate
-        # Basic import test
-        python -c "from backend.app import app; print('✅ App imports successfully')"
+        # Basic import test with correct path
+        cd backend
+        python -c "import sys; sys.path.insert(0, '.'); from app import app; print('✅ App imports successfully')"
         echo "✅ Build completed successfully"
 
     - name: Upload artifact

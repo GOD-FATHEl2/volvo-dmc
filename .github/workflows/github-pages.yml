@@ -34,7 +34,8 @@ jobs:
           
       - name: Test application
         run: |
-          python -c "from backend.app import app; print('✅ App loads successfully')"
+          cd backend
+          python -c "import sys; sys.path.insert(0, '.'); from app import app; print('✅ App loads successfully')"
           
       - name: Setup Pages
         uses: actions/configure-pages@v4

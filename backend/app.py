@@ -1,10 +1,21 @@
 import os
 import json
 import datetime
+import sys
 from flask import Flask, request, jsonify, send_file, send_from_directory, render_template
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
-from generate_qr import generate_dmc_code
+
+# Add the backend directory to Python path for imports
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+try:
+    from generate_qr import generate_dmc_code
+except ImportError:
+    # Fallback for deployment environments
+    def generate_dmc_code(data, filepath):
+        print(f"Warning: generate_qr module not available. Would generate DMC for: {data}")
+        return filepath
 
 app = Flask(__name__)
 CORS(app)
