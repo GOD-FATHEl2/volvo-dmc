@@ -1,4 +1,4 @@
-let BASE = "https://56e8-170-102-114-138.ngrok-free.app"; // Change if deployed elsewhere
+let BASE = "http://127.0.0.1:5000"; // Local development server
 
 async function login() {
   const username = document.getElementById("username").value;

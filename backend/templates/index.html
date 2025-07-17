@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VOLVO DMC Generator</title>
+  <title>VOLVO DMC</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script defer src="{{ url_for('static', filename='script.js') }}"></script>
   <style>
@@ -19,6 +19,37 @@
     text-align: center;
     margin-top: 20px;
     color: #1c1c1e;
+  }
+
+  /* Logo Styles */
+  .app-logo {
+    display: block;
+    margin: 0 auto 20px auto;
+    max-width: 120px;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  .logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .navbar-logo {
+    height: 32px;
+    width: auto;
+    margin-right: 12px;
+    border-radius: 4px;
+  }
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-brand h2 {
+    margin: 0;
+    font-size: 1.5rem;
   }
 
   #login-screen, #main-screen {
@@ -126,6 +157,106 @@
     font-size: 1rem;
   }
 
+  .reader-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #d1d1d6;
+  }
+
+  .tab-button {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    color: #6c6c70;
+    font-size: 1rem;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+  }
+
+  .tab-button.active {
+    color: #1c1c1e;
+    border-bottom-color: #007aff;
+    background: #f8f9fa;
+  }
+
+  .tab-button:hover {
+    background: #f0f0f5;
+  }
+
+  .reader-content {
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  #camera-container {
+    position: relative;
+    max-width: 400px;
+    margin: 20px auto;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  #camera-video {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  #camera-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .scan-frame {
+    width: 200px;
+    height: 200px;
+    border: 3px solid #007aff;
+    border-radius: 12px;
+    box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.5);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { border-color: #007aff; }
+    50% { border-color: #34c759; }
+  }
+
+  #camera-overlay p {
+    color: white;
+    margin-top: 20px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    font-weight: 500;
+  }
+
+  .camera-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+
+  .camera-controls button {
+    flex: 1;
+    min-width: 120px;
+    max-width: 200px;
+  }
+
   .bottom-bar {
     margin-top: 20px;
     display: flex;
@@ -165,19 +296,98 @@
       font-size: 1.1rem;
     }
   }
+
+  /* Print styles */
+  @media print {
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: black !important;
+      background: white !important;
+    }
+    
+    .top-navbar {
+      display: flex !important;
+      background: white !important;
+      box-shadow: none !important;
+      border-bottom: 2px solid #000 !important;
+      margin-bottom: 20px !important;
+    }
+    
+    .navbar-logo {
+      display: block !important;
+      height: 40px !important;
+      width: auto !important;
+    }
+    
+    .navbar-brand h2 {
+      color: black !important;
+      font-size: 1.8rem !important;
+    }
+    
+    .navbar-menu {
+      display: none !important;
+    }
+    
+    .section {
+      display: none !important;
+    }
+    
+    #dmc-container {
+      display: block !important;
+    }
+    
+    .qr-box {
+      border: 1px solid #000 !important;
+      background: white !important;
+      break-inside: avoid;
+    }
+    
+    .qr-box img {
+      filter: contrast(1.2) !important;
+    }
+    
+    .app-logo {
+      display: block !important;
+      max-width: 100px !important;
+    }
+    
+    .floating-camera-section, #read-dmc-section, #camera-scanner-overlay {
+      display: none !important;
+    }
+  }
 </style>
 
 </head>
 <body>
   <div id="login-screen">
-    <h1>VOLVO DMC Gen</h1>
+    <div class="logo-container">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="VOLVO Logo" class="app-logo">
+    </div>
+    <h1>VOLVO DMC</h1>
     <input type="text" id="username" placeholder="Username" />
     <input type="password" id="password" placeholder="Password" />
     <button onclick="login()">Login</button>
   </div>
 
   <div id="main-screen" style="display: none;">
-    <h2>VOLVO DMC Generator</h2>
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar">
+      <div class="navbar-brand">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="VOLVO Logo" class="navbar-logo">
+        <h2>VOLVO DMC</h2>
+      </div>
+      <div class="navbar-menu" id="navbar-menu" style="display: none;">
+        <div class="dropdown">
+          <button class="dropdown-btn" onclick="toggleDropdown()">📥 Download <span class="dropdown-arrow">▼</span></button>
+          <div class="dropdown-content" id="download-dropdown">
+            <a href="#" onclick="downloadPDF()">📄 Download PDF</a>
+            <a href="#" onclick="downloadExcel()">📊 Download Excel</a>
+          </div>
+        </div>
+        <button onclick="window.print()" class="navbar-btn">🖨️ Print</button>
+        <button onclick="deleteSelected()" class="navbar-btn delete-btn">🗑️ Delete Selected</button>
+      </div>
+    </nav>
     
     <!-- DMC Generation Section -->
     <div class="section">
@@ -210,24 +420,56 @@
       </select>
 
       <button onclick="generateQR()">Generate 30 DMC Codes</button>
+      <button onclick="openReadDMC()" class="read-dmc-btn">🔍 Read DMC</button>
     </div>
 
-    <!-- DMC Reading Section -->
-    <div class="section">
-      <h3>📖 Read DMC Codes</h3>
-      <p>Upload an image containing a DMC code to decode it:</p>
-      <input type="file" id="dmc-file-input" accept="image/*" onchange="readDMC()">
-      <div id="read-result" class="result-box" style="display: none;"></div>
+    <!-- Hidden DMC Reading Section -->
+    <div id="read-dmc-section" class="section" style="display: none;">
+      <h3>� Read DMC Codes</h3>
+      <div class="read-options">
+        <button onclick="showFileUpload()" class="option-btn">📁 Upload Image</button>
+        <button onclick="openCameraScanner()" class="option-btn">📷 Live Camera Scanner</button>
+        <button onclick="closeReadDMC()" class="close-btn">✖️ Close</button>
+      </div>
+      
+      <!-- File Upload Section -->
+      <div id="file-upload-section" style="display: none;">
+        <div class="upload-container">
+          <h4>📁 Upload Image to Read DMC</h4>
+          <input type="file" id="file-input" accept="image/*" onchange="readDMCFromFile()">
+          <div id="file-result" class="result-container"></div>
+        </div>
+      </div>
     </div>
 
+    <!-- Floating Camera Scanner -->
+    <div id="camera-scanner-overlay" class="scanner-overlay" style="display: none;">
+      <div class="scanner-window">
+        <div class="scanner-header">
+          <h4>📷 DMC Live Scanner</h4>
+          <div class="scanner-controls">
+            <button id="stop-scanner-btn" onclick="stopScanner()" class="control-btn stop-btn">⏸️ Stop</button>
+            <button id="close-scanner-btn" onclick="closeScanner()" class="control-btn close-btn">✖️ Close</button>
+          </div>
+        </div>
+        
+        <div class="scanner-body">
+          <div class="camera-container">
+            <video id="scanner-video" autoplay playsinline></video>
+            <canvas id="scanner-canvas" style="display: none;"></canvas>
+            <div id="scanner-overlay-frame" class="scanner-overlay-frame">
+              <div class="scan-frame"></div>
+              <div id="scanner-status" class="scanner-status">📱 Initializing camera...</div>
+            </div>
+          </div>
+          
+          <div id="scanner-result" class="scanner-result" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DMC Container -->
     <div id="dmc-container" class="grid-container"></div>
-
-    <div class="bottom-bar">
-      <button onclick="downloadPDF()">Download PDF</button>
-      <button onclick="downloadExcel()">Download Excel</button>
-      <button onclick="window.print()">Print</button>
-      <button onclick="deleteSelected()">🗑 Delete Selected</button>
-    </div>
   </div>
 
   <footer>
