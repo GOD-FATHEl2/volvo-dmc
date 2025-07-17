@@ -1,4 +1,4 @@
-# Alternative Deployment Options for Volvo DMC Generator
+# Alternative Deployment Options for VOLVO DMC
 
 ## 🚨 Azure Corporate Restrictions Detected
 
