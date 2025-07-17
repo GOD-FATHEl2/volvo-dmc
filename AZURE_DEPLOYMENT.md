@@ -1,6 +1,6 @@
-# Azure Deployment Guide for VOLVO DMC
+# Azure Deployment Guide for Volvo DMC Generator
 
-This guide will help you deploy your VOLVO DMC application to Azure App Service.
+This guide will help you deploy your Volvo DMC Generator application to Azure App Service.
 
 ## Prerequisites
 
