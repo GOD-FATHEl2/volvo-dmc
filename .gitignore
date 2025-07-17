@@ -1,0 +1,55 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+.Python
+
+# Flask instance folder
+instance/
+.env
+.env.*
+
+# VS Code settings
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Log files
+*.log
+
+# Excel/PDF exports (optional - uncomment if you don't want to track exports)
+# *.xlsx
+# *.pdf
+
+# Generated DMC images (optional - uncomment if you don't want to track generated images)
+# backend/static/qrs/
+# backend/static/Export_*.pdf
+# backend/static/Export_*.xlsx
+
+# Database file (uncomment if you want to start with a fresh database)
+# backend/database.json
+
+# Development files
+*.tmp
+*.temp
+.pytest_cache/
+.coverage
+
+# IDE files
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup

@@ -82,6 +82,50 @@
     border-radius: 6px;
   }
 
+  .section {
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    border: 1px solid #e5e5ea;
+  }
+
+  .section h3 {
+    margin-top: 0;
+    color: #1c1c1e;
+    font-size: 1.2rem;
+  }
+
+  .result-box {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    background: white;
+    border: 1px solid #d1d1d6;
+  }
+
+  .result-box.success {
+    background: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+  }
+
+  .result-box.error {
+    background: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+  }
+
+  input[type="file"] {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 12px;
+    border: 1px solid #d1d1d6;
+    background-color: #f0f0f5;
+    font-size: 1rem;
+  }
+
   .bottom-bar {
     margin-top: 20px;
     display: flex;
@@ -133,37 +177,48 @@
   </div>
 
   <div id="main-screen" style="display: none;">
-    <h2>Generate DMC Codes</h2>
+    <h2>VOLVO DMC Generator</h2>
+    
+    <!-- DMC Generation Section -->
+    <div class="section">
+      <h3>Generate DMC Codes</h3>
+      <select id="prefix-dropdown">
+        <option value="">-- Choose Letter or Number --</option>
+        <optgroup label="Numbers">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+        </optgroup>
+        <optgroup label="Letters">
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+          <option value="J">J</option><option value="K">K</option><option value="L">L</option>
+          <option value="M">M</option><option value="N">N</option><option value="O">O</option>
+          <option value="P">P</option><option value="Q">Q</option><option value="R">R</option>
+          <option value="S">S</option><option value="T">T</option><option value="U">U</option>
+          <option value="V">V</option><option value="W">W</option><option value="X">X</option>
+          <option value="Y">Y</option><option value="Z">Z</option>
+        </optgroup>
+      </select>
 
-    <!-- 🔽 Mobile-friendly dropdown -->
-    <select id="prefix-dropdown">
-      <option value="">-- Choose Letter or Number --</option>
-      <optgroup label="Numbers">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-      </optgroup>
-      <optgroup label="Letters">
-        <option value="A">A</option><option value="B">B</option><option value="C">C</option>
-        <option value="D">D</option><option value="E">E</option><option value="F">F</option>
-        <option value="G">G</option><option value="H">H</option><option value="I">I</option>
-        <option value="J">J</option><option value="K">K</option><option value="L">L</option>
-        <option value="M">M</option><option value="N">N</option><option value="O">O</option>
-        <option value="P">P</option><option value="Q">Q</option><option value="R">R</option>
-        <option value="S">S</option><option value="T">T</option><option value="U">U</option>
-        <option value="V">V</option><option value="W">W</option><option value="X">X</option>
-        <option value="Y">Y</option><option value="Z">Z</option>
-      </optgroup>
-    </select>
+      <button onclick="generateQR()">Generate 30 DMC Codes</button>
+    </div>
 
-    <button onclick="generateQR()">Generate</button>
+    <!-- DMC Reading Section -->
+    <div class="section">
+      <h3>📖 Read DMC Codes</h3>
+      <p>Upload an image containing a DMC code to decode it:</p>
+      <input type="file" id="dmc-file-input" accept="image/*" onchange="readDMC()">
+      <div id="read-result" class="result-box" style="display: none;"></div>
+    </div>
 
     <div id="dmc-container" class="grid-container"></div>
 

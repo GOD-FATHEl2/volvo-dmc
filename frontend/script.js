@@ -28,7 +28,7 @@ async function generateQR() {
 
   const form = new FormData();
   form.append("prefix", prefix);
-  form.append("count", 30); 
+  form.append("count", 30); // fixed to 30
 
   const res = await fetch(`${BASE}/generate`, {
     method: "POST",
@@ -56,6 +56,62 @@ async function generateQR() {
   });
 
   loadHistory();
+}
+
+async function readDMC() {
+  const fileInput = document.getElementById("dmc-file-input");
+  const resultDiv = document.getElementById("read-result");
+  
+  if (!fileInput.files[0]) {
+    alert("Please select an image file.");
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const formData = new FormData();
+  formData.append("file", file);
+
+  // Show loading message
+  resultDiv.style.display = "block";
+  resultDiv.className = "result-box";
+  resultDiv.innerHTML = "🔄 Reading DMC code...";
+
+  try {
+    const res = await fetch(`${BASE}/read_dmc`, {
+      method: "POST",
+      body: formData
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      resultDiv.className = "result-box success";
+      resultDiv.innerHTML = `
+        <h4>✅ DMC Code Successfully Read!</h4>
+        <p><strong>Decoded Text:</strong> ${result.decoded_text}</p>
+        <p><strong>File:</strong> ${result.filename}</p>
+        <p><strong>Time:</strong> ${new Date(result.timestamp).toLocaleString()}</p>
+      `;
+      
+      // Refresh history to show the read operation
+      loadHistory();
+    } else {
+      resultDiv.className = "result-box error";
+      resultDiv.innerHTML = `
+        <h4>❌ Error</h4>
+        <p>${result.error}</p>
+      `;
+    }
+  } catch (error) {
+    resultDiv.className = "result-box error";
+    resultDiv.innerHTML = `
+      <h4>❌ Error</h4>
+      <p>Failed to read DMC code: ${error.message}</p>
+    `;
+  }
+
+  // Clear the file input
+  fileInput.value = "";
 }
 
 
@@ -112,10 +168,15 @@ async function loadHistory() {
   const data = await res.json();
   let html = "";
   data.reverse().forEach(log => {
+    const isReadOperation = log.operation === "read";
+    const icon = isReadOperation ? "📖" : "🏭";
+    const operationType = isReadOperation ? "READ" : "GENERATED";
+    
     html += `
       <div class="history-box">
-        <p>${log.content}</p>
-        <img src="${BASE}/qrs/${log.file}" width="80" />
+        <p>${icon} ${operationType}: ${log.content}</p>
+        ${!isReadOperation ? `<img src="${BASE}/qrs/${log.file}" width="80" />` : ''}
+        ${isReadOperation ? `<p><small>Source: ${log.filename}</small></p>` : ''}
         <p><small>${log.timestamp}</small></p>
       </div>`;
   });

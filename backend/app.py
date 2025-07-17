@@ -5,6 +5,8 @@ from flask import Flask, request, jsonify, send_file, send_from_directory, rende
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from generate_qr import generate_dmc_code
+from read_dmc import read_dmc_from_bytes
+import io
 
 app = Flask(__name__)
 CORS(app)
@@ -77,6 +79,60 @@ def generate():
 def history():
     with open(LOG_FILE, "r") as f:
         return jsonify(json.load(f))
+
+@app.route("/read_dmc", methods=["POST"])
+def read_dmc():
+    """
+    Read DMC code from uploaded image
+    """
+    if 'file' not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No file selected"}), 400
+    
+    # Check if file is an image
+    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff'}
+    if not ('.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in allowed_extensions):
+        return jsonify({"error": "Invalid file type. Please upload an image."}), 400
+    
+    try:
+        # Read the image data
+        image_data = io.BytesIO(file.read())
+        
+        # Decode the DMC code
+        decoded_text = read_dmc_from_bytes(image_data)
+        
+        if decoded_text:
+            # Log the read operation
+            now = datetime.datetime.now()
+            read_entry = {
+                "content": decoded_text,
+                "operation": "read",
+                "filename": file.filename,
+                "timestamp": str(now)
+            }
+            
+            # Add to history
+            with open(LOG_FILE, "r+") as f:
+                history = json.load(f)
+                history.append(read_entry)
+                f.seek(0)
+                json.dump(history, f, indent=2)
+                f.truncate()
+            
+            return jsonify({
+                "success": True,
+                "decoded_text": decoded_text,
+                "filename": file.filename,
+                "timestamp": str(now)
+            })
+        else:
+            return jsonify({"error": "No DMC code found in the image"}), 400
+            
+    except Exception as e:
+        return jsonify({"error": f"Error processing image: {str(e)}"}), 500
 
 @app.route("/qrs/<path:filename>")
 def get_qr(filename):
