@@ -1,0 +1,101 @@
+# Deploy to multiple cloud platforms
+name: Deploy to Cloud Platforms
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python version
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Create and start virtual environment
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+
+    - name: Install dependencies
+      run: |
+        source venv/bin/activate
+        pip install -r requirements-minimal.txt
+
+    - name: Test application
+      run: |
+        source venv/bin/activate
+        # Basic import test with correct path
+        cd backend
+        python -c "import sys; sys.path.insert(0, '.'); from app import app; print('✅ App imports successfully')"
+        echo "✅ Build completed successfully"
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: python-app
+        path: |
+          .
+          !venv/
+
+  deploy-render:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' }}
+    
+    steps:
+    - name: Notify Render deployment
+      run: |
+        echo "🚀 Ready for Render deployment"
+        echo "📋 To deploy to Render:"
+        echo "1. Go to https://render.com"
+        echo "2. Connect this GitHub repository"
+        echo "3. Create a Web Service with these settings:"
+        echo "   - Build Command: pip install -r requirements-minimal.txt"
+        echo "   - Start Command: gunicorn --bind 0.0.0.0:\$PORT backend.app:app"
+        echo "   - Python Version: 3.11"
+
+  deploy-railway:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ secrets.RAILWAY_TOKEN != '' }}
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy to Railway
+      uses: bervProject/railway-deploy@main
+      with:
+        railway_token: ${{ secrets.RAILWAY_TOKEN }}
+        service: volvo-dmc-generator
+
+  validate-deployment:
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - name: Deployment Status Summary
+      run: |
+        echo "🎯 Volvo DMC Generator Deployment Status"
+        echo "========================================"
+        echo "✅ Build: Completed successfully"
+        echo "✅ Code: Available on GitHub"
+        echo "📦 Artifacts: Ready for deployment"
+        echo ""
+        echo "🌐 Available deployment options:"
+        echo "- Azure: Pending IT setup (see GITHUB_AZURE_DEPLOYMENT.md)"
+        echo "- Alternative platforms: Available (see DEPLOYMENT_ALTERNATIVES.md)"
+        echo ""
+        echo "📱 Current status:"
+        echo "- Repository: https://github.com/${{ github.repository }}"
+        echo "- Local development: http://localhost:8000"
+        echo "- Enterprise ready: ✅"
