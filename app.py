@@ -17,9 +17,9 @@ sys.path.insert(0, backend_dir)
 # Change working directory to backend for proper file access
 os.chdir(backend_dir)
 
-# Import Flask app from backend
-import backend.app as backend_app
-app = backend_app.app
+# Import Flask app from backend directory
+import backend.main as backend_main
+app = backend_main.app
 
 if __name__ == "__main__":
     print("🚀 Starting VOLVO DMC Generator...")
