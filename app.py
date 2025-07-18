@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-VOLVO DMC Generator - Development Server
-© 2025 VOLVO Cars. All rights reserved.
-Made by: Nawoar Ekkou
+VOLVO DMC Generator - Main Application Entry Point
+Run this file to start the Flask development server locally
 
-Local development server for the VOLVO DMC Generator application.
-Production deployment: https://dmc-ggbxhgeaajb8ffed.swedencentral-01.azurewebsites.net
+© 2025 VOLVO Cars. All rights reserved. Made by: Nawoar Ekkou
 """
 
 import os
@@ -22,6 +20,7 @@ if __name__ == "__main__":
     print("🚀 Starting VOLVO DMC Generator...")
     print("📍 Server will be available at: http://localhost:5000")
     print("🔧 Development mode enabled")
+    print("© 2025 VOLVO Cars. All rights reserved. Made by: Nawoar Ekkou")
     print("=" * 50)
     
     # Run in development mode

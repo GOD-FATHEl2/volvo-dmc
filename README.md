@@ -2,20 +2,6 @@
 
 A professional Data Matrix Code (DMC) generator built with Flask for VOLVO manufacturing processes.
 
-**© VOLVO Cars. All rights reserved.**  
-**Made by: Nawoar Ekkou**
-
-## Live Demo
-
-🌐 **Azure Deployment**: [https://dmc-ggbxhgeaajb8ffed.swedencentral-01.azurewebsites.net](https://dmc-ggbxhgeaajb8ffed.swedencentral-01.azurewebsites.net)
-
-### Azure App Service Details
-- **Resource Group**: rg-centralcoreservices-nonprod-001
-- **Location**: Sweden Central
-- **Runtime**: Python 3.11 on Linux
-- **Plan**: App Service Plan (Free F1)
-- **Status**: Running ✅
-
 ## Features
 
 - Industrial-grade DMC Generation: Generate Data Matrix codes with pylibdmtx
@@ -56,22 +42,7 @@ A professional Data Matrix Code (DMC) generator built with Flask for VOLVO manuf
 
 ### Production Deployment
 
-#### Azure App Service (Current Deployment)
-- **Live URL**: https://dmc-ggbxhgeaajb8ffed.swedencentral-01.azurewebsites.net
-- **Resource Group**: rg-centralcoreservices-nonprod-001
-- **Location**: Sweden Central
-- **Subscription**: app-7592-online-nonprod-001
-- **Runtime**: Python 3.11 on Linux
-- **Plan**: ASP-rgcentralcoreservicesnonprod001-bbb0 (Free F1)
-- **Virtual IP**: 51.12.31.11
-
-**Deployment Steps**:
-1. Create an Azure App Service (Python 3.11)
-2. Configure deployment from GitHub
-3. Set startup command: `python run_production.py`
-4. Deploy from main branch
-
-#### Alternative Deployment Options
+#### Azure App Service
 1. Fork this repository
 2. Create an Azure App Service (Python 3.11)
 3. Configure deployment from GitHub
@@ -152,14 +123,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Copyright
 
-**© 2025 VOLVO Cars. All rights reserved.**
-
-This application is developed for VOLVO manufacturing processes and is proprietary to VOLVO Cars.
-
-**Developer**: Nawoar Ekkou  
-**Company**: VOLVO Cars  
-**Purpose**: Data Matrix Code generation for manufacturing processes  
+© 2025 VOLVO Cars. All rights reserved. Made by: Nawoar Ekkou
 
 ## Support
 
-For support, please create an issue in the GitHub repository or contact the development team.
+For support, please create an issue in the GitHub repository.

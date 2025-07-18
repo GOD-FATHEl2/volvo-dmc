@@ -1,10 +1,8 @@
 """
-VOLVO DMC Generator - Flask Application
-© 2025 VOLVO Cars. All rights reserved.
-Made by: Nawoar Ekkou
+VOLVO DMC Generator - Flask Backend Application
+Professional Data Matrix Code generator for VOLVO manufacturing processes
 
-A professional Data Matrix Code generator for VOLVO manufacturing processes.
-Live deployment: https://dmc-ggbxhgeaajb8ffed.swedencentral-01.azurewebsites.net
+© 2025 VOLVO Cars. All rights reserved. Made by: Nawoar Ekkou
 """
 
 import os
@@ -266,7 +264,7 @@ def download_excel():
             for col, value in enumerate(row, 1):
                 ws.cell(row=current_row, column=col, value=value)
 
-        ws.oddFooter.center.text = "VOLVO Cars Torslanda All rights reserved. © 2025 Made By: Nawoar Ekkou"
+        ws.oddFooter.center.text = "© 2025 VOLVO Cars. All rights reserved. Made by: Nawoar Ekkou"
         file = os.path.join(BASE_DIR, "static", f"Export_{datetime.datetime.now().timestamp()}.xlsx")
         wb.save(file)
         return send_file(file, as_attachment=True)

@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-VOLVO DMC Generator - Production Startup Script
-© 2025 VOLVO Cars. All rights reserved.
-Made by: Nawoar Ekkou
+Production startup script for VOLVO DMC Generator
+This script starts the Flask application with Gunicorn for production deployment
 
-Production startup script for VOLVO DMC Generator with Gunicorn
-Azure deployment: https://dmc-ggbxhgeaajb8ffed.swedencentral-01.azurewebsites.net
+© 2025 VOLVO Cars. All rights reserved. Made by: Nawoar Ekkou
 """
 
 import os
@@ -15,6 +13,7 @@ import subprocess
 def main():
     """Main function to start the application"""
     print("🚀 Starting VOLVO DMC Generator (Production Mode)")
+    print("© 2025 VOLVO Cars. All rights reserved. Made by: Nawoar Ekkou")
     print("=" * 50)
     
     # Determine the port (for Azure App Service or local)
