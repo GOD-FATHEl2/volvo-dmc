@@ -19,10 +19,17 @@ function showNavbarMenu() {
     const navbar = document.getElementById('topNavbar');
     const navbarMenu = document.querySelector('.navbar-menu');
     
-    if (navbar && navbarMenu) {
+    if (navbar) {
         navbar.style.display = 'flex';
+    }
+    if (navbarMenu) {
         navbarMenu.style.display = 'flex';
     }
+}
+
+function getAllGeneratedCodes() {
+  const codeElements = document.querySelectorAll('.qr-box p strong');
+  return Array.from(codeElements).map(el => el.textContent);
 }
 
 // Close dropdown when clicking outside
@@ -128,7 +135,15 @@ async function loadHistory() {
 
 async function downloadPDF() {
   try {
-    const res = await fetch(`${BASE}/export_pdf`, { method: "POST" });
+    // Get all generated codes
+    const codes = getAllGeneratedCodes();
+    const res = await fetch(`${BASE}/download_pdf`, { 
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ files: codes })
+    });
     if (res.ok) {
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
@@ -145,7 +160,15 @@ async function downloadPDF() {
 
 async function downloadExcel() {
   try {
-    const res = await fetch(`${BASE}/export_excel`, { method: "POST" });
+    // Get all generated codes
+    const codes = getAllGeneratedCodes();
+    const res = await fetch(`${BASE}/download_excel`, { 
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ files: codes })
+    });
     if (res.ok) {
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);

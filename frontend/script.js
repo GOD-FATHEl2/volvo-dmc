@@ -35,12 +35,16 @@ async function generateQR() {
     body: form
   });
 
-  const codes = await res.json();
-  if (!Array.isArray(codes)) {
+  if (res.ok) {
+    const data = await res.json();
+    displayQRCodes(data.codes);
+    loadHistory();
+  } else {
     alert("Error generating DMC codes.");
-    return;
   }
+}
 
+function displayQRCodes(codes) {
   const container = document.getElementById("dmc-container");
   container.innerHTML = ""; // clear previous
 
@@ -48,14 +52,12 @@ async function generateQR() {
     const box = document.createElement("div");
     box.className = "qr-box";
     box.innerHTML = `
-      <input type="checkbox" name="codes" value="${code.file}" checked>
-      <img src="${BASE}/qrs/${code.file}" alt="DMC" />
-      <p style="display:none;">${code.content}</p>
+      <input type="checkbox" name="codes" value="${code.text}" checked>
+      <img src="data:image/png;base64,${code.base64}" alt="DMC Code" />
+      <p><strong>${code.text}</strong></p>
     `;
     container.appendChild(box);
   });
-
-  loadHistory();
 }
 
 async function readDMC() {

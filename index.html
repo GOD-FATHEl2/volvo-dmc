@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VOLVO DMC Generator</title>
+  <style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f7;
+    color: #1c1c1e;
+  }
+
+  h1, h2 {
+    text-align: center;
+    margin-top: 20px;
+    color: #1c1c1e;
+  }
+
+  .app-logo {
+    display: block;
+    margin: 0 auto 20px auto;
+    max-width: 120px;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  .logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .navbar-logo {
+    height: 32px;
+    width: auto;
+    margin-right: 12px;
+    border-radius: 4px;
+  }
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navbar-brand h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  #login-screen, #main-screen {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+
+  input[type="text"], input[type="password"], select {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #d1d1d6;
+    border-radius: 12px;
+    background-color: #f0f0f5;
+  }
+
+  button {
+    background-color: #f2f2f7;
+    color: #1c1c1e;
+    border: 1px solid #d1d1d6;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 10px 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(60, 60, 67, 0.1);
+  }
+
+  button:hover {
+    background-color: #e5e5ea;
+    transform: scale(1.02);
+  }
+
+  .demo-notice {
+    background: #007aff;
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  .top-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: white;
+    border-bottom: 1px solid #d1d1d6;
+    margin-bottom: 20px;
+    border-radius: 12px;
+  }
+
+  .navbar-menu {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-btn {
+    background: #007aff;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .dropdown-btn:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    z-index: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+  }
+
+  .dropdown-content a {
+    color: #1c1c1e;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s ease;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #f8f9fa;
+  }
+
+  .dropdown.active .dropdown-content {
+    display: block;
+  }
+
+  .navbar-btn {
+    background: #34c759;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-btn:hover {
+    background: #28a745;
+    transform: translateY(-2px);
+  }
+
+  .delete-btn {
+    background: #ff3b30;
+  }
+
+  .delete-btn:hover {
+    background: #dc3545;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .qr-box {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+
+  .qr-box img {
+    width: 100%;
+    max-width: 90px;
+    height: auto;
+    border-radius: 6px;
+  }
+
+  .section {
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    border: 1px solid #e5e5ea;
+  }
+
+  .section h3 {
+    margin-top: 0;
+    color: #1c1c1e;
+    font-size: 1.2rem;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 12px;
+    padding: 10px;
+    margin-top: 40px;
+    color: #777;
+    background: #f2f2f7;
+    border-top: 1px solid #ccc;
+  }
+
+  /* Print styles */
+  @media print {
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: black !important;
+      background: white !important;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .top-navbar {
+      display: flex !important;
+      background: white !important;
+      box-shadow: none !important;
+      border-bottom: 2px solid #000 !important;
+      margin-bottom: 20px !important;
+      page-break-inside: avoid;
+    }
+    
+    .navbar-logo {
+      display: block !important;
+      height: 40px !important;
+      width: auto !important;
+    }
+    
+    .navbar-brand h2 {
+      color: black !important;
+      font-size: 1.8rem !important;
+    }
+    
+    .navbar-menu {
+      display: none !important;
+    }
+    
+    .section {
+      display: none !important;
+    }
+    
+    #dmc-container {
+      display: grid !important;
+      grid-template-columns: repeat(5, 1fr) !important;
+      gap: 15px !important;
+      margin: 20px 0 !important;
+      page-break-inside: avoid;
+    }
+    
+    .qr-box {
+      border: 1px solid #000 !important;
+      background: white !important;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      padding: 8px !important;
+      text-align: center !important;
+      box-shadow: none !important;
+    }
+    
+    .qr-box img {
+      filter: contrast(1.2) !important;
+      width: 80px !important;
+      height: 80px !important;
+      margin-bottom: 5px !important;
+    }
+    
+    .qr-box p {
+      font-size: 12px !important;
+      margin: 5px 0 0 0 !important;
+      font-weight: bold !important;
+    }
+    
+    .demo-notice {
+      display: none !important;
+    }
+    
+    /* Page break after every 25 codes (5 rows of 5) */
+    .qr-box:nth-child(25n) {
+      page-break-after: always;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h1, h2 {
+      font-size: 20px;
+    }
+
+    .top-navbar {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .navbar-menu {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    input, select, button {
+      font-size: 1.1rem;
+    }
+  }
+</style>
+
+</head>
+<body>
+  <div id="login-screen">
+    <div class="logo-container">
+      <div style="width: 120px; height: 60px; background: #1c1c1e; border-radius: 8px; margin: 0 auto; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">VOLVO</div>
+    </div>
+    <h1>VOLVO DMC Generator</h1>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="main-screen" style="display: none;">
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar" id="topNavbar">
+      <div class="navbar-brand">
+        <div style="width: 32px; height: 32px; background: #1c1c1e; border-radius: 4px; margin-right: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 10px;">V</div>
+        <h2>VOLVO DMC</h2>
+      </div>
+      <div class="navbar-menu" id="navbar-menu" style="display: none;">
+        <div class="dropdown">
+          <button class="dropdown-btn" onclick="toggleDropdown()">📥 Download <span class="dropdown-arrow">▼</span></button>
+          <div class="dropdown-content" id="download-dropdown">
+            <a href="#" onclick="downloadPDF()">📄 Download PDF</a>
+            <a href="#" onclick="downloadExcel()">📊 Download Excel</a>
+          </div>
+        </div>
+        <button onclick="window.print()" class="navbar-btn">🖨️ Print</button>
+        <button onclick="deleteSelected()" class="navbar-btn delete-btn">🗑️ Delete Selected</button>
+      </div>
+    </nav>
+
+    <div class="demo-notice">
+      <strong>🚀 Demo Mode</strong><br>
+      This is a static demo version. For full functionality including DMC code generation and reading, please use the full application with backend server.
+    </div>
+    
+    <!-- DMC Generation Section -->
+    <div class="section">
+      <h3>Generate DMC Codes</h3>
+      <select id="prefix-dropdown">
+        <option value="">-- Choose Letter or Number --</option>
+        <optgroup label="Numbers">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+        </optgroup>
+        <optgroup label="Letters">
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E">E</option><option value="F">F</option>
+          <option value="G">G</option><option value="H">H</option><option value="I">I</option>
+          <option value="J">J</option><option value="K">K</option><option value="L">L</option>
+          <option value="M">M</option><option value="N">N</option><option value="O">O</option>
+          <option value="P">P</option><option value="Q">Q</option><option value="R">R</option>
+          <option value="S">S</option><option value="T">T</option><option value="U">U</option>
+          <option value="V">V</option><option value="W">W</option><option value="X">X</option>
+          <option value="Y">Y</option><option value="Z">Z</option>
+        </optgroup>
+      </select>
+
+      <button onclick="generateDemoQR()">Generate Demo DMC Codes</button>
+      <button onclick="alert('DMC reading feature requires the full backend application')">🔍 Read DMC</button>
+    </div>
+
+    <!-- DMC Container -->
+    <div id="dmc-container" class="grid-container"></div>
+  </div>
+
+  <footer>
+    VOLVO Cars Torslanda All rights reserved. © 2025 Made By: Nawoar Ekkou
+  </footer>
+
+  <script>
+    // Static demo functionality
+    function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      if (username === "admin" && password === "admin") {
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("main-screen").style.display = "block";
+      } else {
+        alert("Login failed. Use admin/admin for demo.");
+      }
+    }
+
+    function toggleDropdown() {
+      const dropdown = document.querySelector('.dropdown');
+      dropdown.classList.toggle('active');
+    }
+
+    function showNavbarMenu() {
+      const navbar = document.getElementById('topNavbar');
+      const navbarMenu = document.querySelector('.navbar-menu');
+      
+      if (navbar) {
+        navbar.style.display = 'flex';
+      }
+      if (navbarMenu) {
+        navbarMenu.style.display = 'flex';
+      }
+    }
+
+    function generateDemoQR() {
+      const prefix = document.getElementById("prefix-dropdown").value;
+      if (!prefix) {
+        alert("Please select a letter or number.");
+        return;
+      }
+
+      // Generate demo DMC codes
+      const container = document.getElementById("dmc-container");
+      container.innerHTML = "";
+      
+      // Create demo codes
+      for (let i = 0; i < 30; i++) {
+        const now = new Date();
+        const dateStr = `${now.getMonth() + 1}${now.getDate()}${now.getFullYear().toString().slice(-1)}`;
+        const timeStr = `${now.getHours()}${now.getSeconds()}`;
+        const codeText = `${prefix}${dateStr}${timeStr}${i}`;
+        
+        const box = document.createElement("div");
+        box.className = "qr-box";
+        box.innerHTML = `
+          <div style="width: 90px; height: 90px; background: #000; display: flex; align-items: center; justify-content: center; border-radius: 6px; margin-bottom: 8px;">
+            <div style="width: 80px; height: 80px; background: #fff; display: grid; grid-template-columns: repeat(8, 1fr); gap: 1px;">
+              ${Array.from({length: 64}, (_, i) => `<div style="background: ${Math.random() > 0.5 ? '#000' : '#fff'};"></div>`).join('')}
+            </div>
+          </div>
+          <p><strong>${codeText}</strong></p>
+          <input type="checkbox" onchange="toggleSelection(this, '${codeText}')" />
+        `;
+        container.appendChild(box);
+      }
+      
+      showNavbarMenu();
+    }
+
+    function toggleSelection(checkbox, codeText) {
+      // Demo selection functionality
+    }
+
+    function downloadPDF() {
+      alert("PDF download feature requires the full backend application. This is a static demo.");
+    }
+
+    function downloadExcel() {
+      alert("Excel download feature requires the full backend application. This is a static demo.");
+    }
+
+    function deleteSelected() {
+      alert("Delete feature requires the full backend application. This is a static demo.");
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const dropdown = document.querySelector('.dropdown');
+      if (dropdown && !dropdown.contains(event.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
