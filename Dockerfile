@@ -30,6 +30,7 @@ EXPOSE 8000
 # Set environment variables
 ENV FLASK_APP=backend/app.py
 ENV FLASK_ENV=production
+ENV PYTHONPATH=/app/backend:/app
 
 # Run the application with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "backend.app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "--chdir", "/app", "backend.app:app"]
