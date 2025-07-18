@@ -1,0 +1,77 @@
+# Git files
+.git
+.gitignore
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.pytest_cache/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Azure files
+.azure/
+
+# Documentation
+docs/
+*.md
+LICENSE
+
+# Local development files
+.python-version
+run-local.ps1
+deploy-heroku.ps1
+cleanup-workflows.ps1
+
+# Build artifacts
+*.zip
+build/
+dist/
+
+# Logs
+logs/
+*.log
+
+# Test files
+test_*
+
+# Deployment scripts
+prepare_deployment.py
+startup.py
+startup_simple.py
+run_production.py
+
+# Config files not needed in container
+azure.yaml
+Procfile
+runtime.txt
+web.config
+pyproject.toml
+startup.sh
+startup.txt
+azure-deployment.conf
+
+# Requirements variants (we only need requirements.txt)
+requirements-*.txt
+
+# Generated QR codes and exports (will be created at runtime)
+backend/static/qrs/*.png
+backend/static/*.pdf
+backend/static/*.xlsx

@@ -13,11 +13,12 @@ RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     pkg-config \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
-COPY requirements-minimal.txt .
-RUN pip install --no-cache-dir -r requirements-minimal.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code
 COPY . .
@@ -37,7 +38,7 @@ USER appuser
 EXPOSE 8000
 
 # Set environment variables
-ENV FLASK_APP=backend/app.py
+ENV FLASK_APP=main.py
 ENV FLASK_ENV=production
 ENV PYTHONPATH=/app/backend:/app
 ENV PYTHONUNBUFFERED=1
@@ -47,4 +48,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:8000/ || exit 1
 
 # Run the application with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "120", "--worker-class", "sync", "--chdir", "/app", "backend.app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "120", "--worker-class", "sync", "--chdir", "/app", "main:app"]
