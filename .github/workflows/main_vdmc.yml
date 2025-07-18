@@ -66,4 +66,4 @@ jobs:
         with:
           app-name: 'VDMC'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4E0DA76F99DA4349985778392E601BC2 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_646C9DC8CA4048E1AF222BB92DD12A7D }}
