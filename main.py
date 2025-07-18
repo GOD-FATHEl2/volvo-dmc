@@ -9,10 +9,10 @@ sys.path.insert(0, backend_path)
 # Change to backend directory
 os.chdir(backend_path)
 
-# Import Flask app
-import app
+# Import Flask app from backend main module
+from main import app
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 8000))
     # Run the Flask app
-    app.app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False)
