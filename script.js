@@ -171,10 +171,15 @@ async function generateBatchDMC() {
 
 function displaySingleDMC(result) {
     const resultContainer = document.getElementById('dmc-result');
+    // Handle both PNG and SVG image data
+    const imageData = result.image.startsWith('PHN2Zw') ? 
+        `data:image/svg+xml;base64,${result.image}` : 
+        `data:image/png;base64,${result.image}`;
+    
     resultContainer.innerHTML = `
         <div class="dmc-display">
             <div class="dmc-image">
-                <img src="data:image/png;base64,${result.image}" alt="DMC" />
+                <img src="${imageData}" alt="DMC" />
             </div>
             <div class="dmc-info">
                 <h4>DMC Data:</h4>
@@ -196,19 +201,26 @@ function displayBatchResults(results) {
     const resultsContainer = document.getElementById('batch-results');
     const controlsContainer = document.getElementById('batch-controls');
     
-    resultsContainer.innerHTML = results.map((result, index) => `
-        <div class="batch-item">
-            <div class="batch-image">
-                <img src="data:image/png;base64,${result.image}" alt="DMC ${index + 1}" />
+    resultsContainer.innerHTML = results.map((result, index) => {
+        // Handle both PNG and SVG image data
+        const imageData = result.image.startsWith('PHN2Zw') ? 
+            `data:image/svg+xml;base64,${result.image}` : 
+            `data:image/png;base64,${result.image}`;
+        
+        return `
+            <div class="batch-item">
+                <div class="batch-image">
+                    <img src="${imageData}" alt="DMC ${index + 1}" />
+                </div>
+                <div class="batch-info">
+                    <p class="batch-data">${result.data}</p>
+                    <button onclick="downloadImage('${result.image}', '${result.data}')" class="btn secondary small">
+                        💾 Download
+                    </button>
+                </div>
             </div>
-            <div class="batch-info">
-                <p class="batch-data">${result.data}</p>
-                <button onclick="downloadImage('${result.image}', '${result.data}')" class="btn secondary small">
-                    💾 Download
-                </button>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
     
     controlsContainer.style.display = 'block';
 }
@@ -350,9 +362,14 @@ function generateDemoImage(data) {
 }
 
 function downloadImage(base64, filename) {
+    // Handle both PNG and SVG image data
+    const isBase64SVG = base64.startsWith('PHN2Zw');
+    const mimeType = isBase64SVG ? 'image/svg+xml' : 'image/png';
+    const fileExt = isBase64SVG ? 'svg' : 'png';
+    
     const link = document.createElement('a');
-    link.href = `data:image/png;base64,${base64}`;
-    link.download = `${filename.replace(/[^a-zA-Z0-9]/g, '_')}_dmc.png`;
+    link.href = `data:${mimeType};base64,${base64}`;
+    link.download = `${filename.replace(/[^a-zA-Z0-9]/g, '_')}_dmc.${fileExt}`;
     link.click();
 }
 

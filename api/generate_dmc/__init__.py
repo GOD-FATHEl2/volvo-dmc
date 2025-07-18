@@ -3,38 +3,69 @@ import json
 import logging
 import base64
 from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont
-import pandas as pd
+try:
+    from PIL import Image, ImageDraw, ImageFont
+except ImportError:
+    Image = ImageDraw = ImageFont = None
 import datetime
 import os
 
 # Create a simplified DMC generator without pylibdmtx
 def generate_dmc_placeholder(data):
     """Generate a placeholder image for DMC since pylibdmtx isn't available in Azure Functions"""
-    # Create a simple placeholder image
-    img = Image.new('RGB', (200, 200), color='white')
-    draw = ImageDraw.Draw(img)
-    
-    # Draw a simple grid pattern to simulate DMC
-    for i in range(0, 200, 10):
-        for j in range(0, 200, 10):
-            if (i + j) % 20 == 0:
-                draw.rectangle([i, j, i+5, j+5], fill='black')
-    
-    # Add text
     try:
-        font = ImageFont.load_default()
-        draw.text((10, 10), "DMC", fill='black', font=font)
-        draw.text((10, 30), str(data)[:20], fill='black', font=font)
-    except:
-        pass
+        if Image is None:
+            # Fallback to a simple base64 encoded placeholder
+            return create_text_placeholder(data)
+        
+        # Create a simple placeholder image
+        img = Image.new('RGB', (200, 200), color='white')
+        draw = ImageDraw.Draw(img)
+        
+        # Draw a simple grid pattern to simulate DMC
+        for i in range(0, 200, 10):
+            for j in range(0, 200, 10):
+                if (i + j) % 20 == 0:
+                    draw.rectangle([i, j, i+5, j+5], fill='black')
+        
+        # Add text
+        try:
+            font = ImageFont.load_default()
+            draw.text((10, 10), "DMC", fill='black', font=font)
+            draw.text((10, 30), str(data)[:20], fill='black', font=font)
+        except:
+            pass
+        
+        # Convert to base64
+        buffer = BytesIO()
+        img.save(buffer, format='PNG')
+        img_str = base64.b64encode(buffer.getvalue()).decode()
+        
+        return img_str
+    except Exception as e:
+        logging.warning(f"PIL not available, using text placeholder: {e}")
+        return create_text_placeholder(data)
+
+def create_text_placeholder(data):
+    """Create a simple text-based placeholder when PIL is not available"""
+    # Simple SVG placeholder
+    svg_content = f'''<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="200" height="200" fill="white" stroke="black" stroke-width="2"/>
+        <text x="10" y="30" font-family="Arial" font-size="16" fill="black">DMC</text>
+        <text x="10" y="50" font-family="Arial" font-size="12" fill="black">{data[:20]}</text>
+        <g fill="black">
+            <rect x="20" y="60" width="4" height="4"/>
+            <rect x="30" y="70" width="4" height="4"/>
+            <rect x="40" y="60" width="4" height="4"/>
+            <rect x="50" y="70" width="4" height="4"/>
+            <rect x="60" y="60" width="4" height="4"/>
+            <rect x="70" y="70" width="4" height="4"/>
+        </g>
+    </svg>'''
     
-    # Convert to base64
-    buffer = BytesIO()
-    img.save(buffer, format='PNG')
-    img_str = base64.b64encode(buffer.getvalue()).decode()
-    
-    return img_str
+    # Convert SVG to base64
+    svg_bytes = svg_content.encode('utf-8')
+    return base64.b64encode(svg_bytes).decode()
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Generate DMC function processed a request.')
