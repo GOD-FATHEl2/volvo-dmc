@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-VOLVO DMC Generator - Main Application Entry Point
-Run this file to start the Flask development server locally
+VOLVO DMC Generator - WSGI Entry Point
+Entry point for Azure Web App deployment
 
 © 2025 VOLVO Cars. All rights reserved. Made by: Nawoar Ekkou
 """
@@ -9,12 +9,17 @@ Run this file to start the Flask development server locally
 import os
 import sys
 
-# Add backend directory to path
-backend_path = os.path.join(os.path.dirname(__file__), 'backend')
-sys.path.insert(0, backend_path)
+# Add backend directory to Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+backend_dir = os.path.join(current_dir, 'backend')
+sys.path.insert(0, backend_dir)
 
-# Import the Flask app from backend
-from app import app
+# Change working directory to backend for proper file access
+os.chdir(backend_dir)
+
+# Import Flask app from backend
+import backend.app as backend_app
+app = backend_app.app
 
 if __name__ == "__main__":
     print("🚀 Starting VOLVO DMC Generator...")
