@@ -13,7 +13,20 @@
 
 ---
 
-## 📋 Table of Contents
+## � Quick Deployment Status
+
+| Deployment Type | Status | URL | Notes |
+|----------------|--------|-----|-------|
+| **Azure App Service** | ✅ Ready | *Configure in Azure* | Full Flask app with all features |
+| **Docker Container** | ✅ Ready | *Deploy anywhere* | Portable containerized version |
+| **Local Development** | ✅ Ready | `http://localhost:5000` | Run with `python backend/app.py` |
+| **Azure Static Web Apps** | ⚠️ Disabled | *Requires reconfiguration* | Resource unavailable |
+
+> **Recommended**: Use Azure App Service for production deployment with complete functionality.
+
+---
+
+## �📋 Table of Contents
 
 - [Overview](#-overview)
 - [Features](#-features)
