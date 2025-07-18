@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """
-Production startup script for VOLVO DMC Generator
-This script starts the Flask application with Gunicorn for production deployment
+VOLVO DMC Generator - Production Startup Script
+© 2025 VOLVO Cars. All rights reserved.
+Made by: Nawoar Ekkou
+
+Production startup script for VOLVO DMC Generator with Gunicorn
+Azure deployment: https://dmc-ggbxhgeaajb8ffed.swedencentral-01.azurewebsites.net
 """
 
 import os

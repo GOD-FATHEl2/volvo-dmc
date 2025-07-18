@@ -1,3 +1,12 @@
+"""
+VOLVO DMC Generator - Flask Application
+© 2025 VOLVO Cars. All rights reserved.
+Made by: Nawoar Ekkou
+
+A professional Data Matrix Code generator for VOLVO manufacturing processes.
+Live deployment: https://dmc-ggbxhgeaajb8ffed.swedencentral-01.azurewebsites.net
+"""
+
 import os
 import json
 import datetime
