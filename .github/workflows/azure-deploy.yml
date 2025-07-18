@@ -17,6 +17,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libdmtx0b libdmtx-dev
+
     - name: Set up Python version
       uses: actions/setup-python@v5
       with:
@@ -32,11 +37,10 @@ jobs:
         source venv/bin/activate
         pip install -r requirements-minimal.txt
 
-    - name: Run tests (if any)
+    - name: Test dependencies
       run: |
         source venv/bin/activate
-        # Add your test commands here when ready
-        echo "Tests passed"
+        python test_dependencies.py
 
     - name: Upload artifact for deployment jobs
       uses: actions/upload-artifact@v4

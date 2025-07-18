@@ -20,6 +20,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libdmtx0b libdmtx-dev
+    
     - name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v5
       with:
@@ -34,6 +39,11 @@ jobs:
       run: |
         source venv/bin/activate
         pip install -r requirements.txt
+    
+    - name: Test dependencies
+      run: |
+        source venv/bin/activate
+        python test_dependencies.py
     
     - name: Zip artifact for deployment
       run: |
