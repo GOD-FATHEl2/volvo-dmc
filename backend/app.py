@@ -339,4 +339,6 @@ def download_pdf():
         return jsonify({"error": f"Error generating PDF: {str(e)}"}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Get port from environment variable (for Azure Web App) or default to 8000
+    port = int(os.environ.get("PORT", 8000))
+    app.run(debug=False, host="0.0.0.0", port=port)

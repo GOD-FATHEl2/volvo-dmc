@@ -1,5 +1,6 @@
-# Azure App Service deployment configuration
-# This file is used when deploying to Azure App Service
+[config]
+project = .
 
-python_version = "3.11"
-startup_command = "gunicorn --bind=0.0.0.0 --timeout 600 backend.app:app"
+# Azure App Service deployment configuration
+# Runtime: Python 3.11
+# Operating System: Linux (recommended for Python apps)

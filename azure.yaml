@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: volvo-dmc-generator
+metadata:
+  template: volvo-dmc-generator@0.0.1-beta
+
+infra:
+  provider: bicep
+
+services:
+  volvo-dmc-app:
+    project: .
+    language: python
+    host: containerapp
+
+hooks:
+  preprovision:
+    shell: sh
+    run: echo "Preparing Azure resources for VOLVO DMC Generator"
+    interactive: false
+    continueOnError: false
+  
+  prepackage:
+    shell: sh
+    run: echo "Preparing container image for VOLVO DMC Generator"
+    interactive: false
+    continueOnError: false

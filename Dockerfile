@@ -1,10 +1,10 @@
-# Use Python 3.11 slim image
+# Use Python 3.11 slim image for better compatibility with Azure Container Apps
 FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies for pylibdmtx
+# Install system dependencies for pylibdmtx and other native libraries
 RUN apt-get update && apt-get install -y \
     libdmtx0b \
     libdmtx-dev \
@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     libzbar-dev \
     gcc \
     g++ \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
@@ -21,8 +22,16 @@ RUN pip install --no-cache-dir -r requirements-minimal.txt
 # Copy the application code
 COPY . .
 
-# Create necessary directories
-RUN mkdir -p backend/static/qrs
+# Create necessary directories with proper permissions
+RUN mkdir -p backend/static/qrs && \
+    chmod -R 755 backend/static && \
+    touch backend/database.json && \
+    chmod 666 backend/database.json
+
+# Create a non-root user for security
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN chown -R appuser:appuser /app
+USER appuser
 
 # Expose port
 EXPOSE 8000
@@ -31,6 +40,11 @@ EXPOSE 8000
 ENV FLASK_APP=backend/app.py
 ENV FLASK_ENV=production
 ENV PYTHONPATH=/app/backend:/app
+ENV PYTHONUNBUFFERED=1
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:8000/ || exit 1
 
 # Run the application with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "--chdir", "/app", "backend.app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "120", "--worker-class", "sync", "--chdir", "/app", "backend.app:app"]
