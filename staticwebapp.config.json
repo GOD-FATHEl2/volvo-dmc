@@ -1,13 +1,21 @@
 {
   "routes": [
     {
-      "route": "/*",
-      "serve": "/frontend/index.html",
-      "statusCode": 200
+      "route": "/api/*",
+      "allowedRoles": ["anonymous"]
     }
   ],
   "navigationFallback": {
-    "rewrite": "/frontend/index.html"
+    "rewrite": "/index.html"
+  },
+  "responseOverrides": {
+    "401": {
+      "redirect": "/",
+      "statusCode": 302
+    }
+  },
+  "globalHeaders": {
+    "content-security-policy": "default-src https: 'unsafe-eval' 'unsafe-inline' data: blob:; object-src 'none'"
   },
   "mimeTypes": {
     ".json": "application/json"

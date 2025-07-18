@@ -1,11 +1,8 @@
-# DISABLED: Azure Static Web Apps CI/CD
-# This workflow is disabled because the Azure Static Web App resource is no longer available
-# Use the Azure App Service deployment instead for the full Flask application
-
-name: Azure Static Web Apps CI/CD (DISABLED)
+# Azure Static Web Apps CI/CD for VOLVO DMC Generator
+name: Azure Static Web Apps CI/CD
 
 on:
-  workflow_dispatch: # Only run manually
+  workflow_dispatch: # Manual trigger only
   # push:
   #   branches:
   #     - main
@@ -16,20 +13,46 @@ on:
 
 jobs:
   build_and_deploy_job:
-    if: false # DISABLED - workflow is disabled
     runs-on: ubuntu-latest
-    name: Build and Deploy Job (DISABLED)
-    permissions:
-       id-token: write
-       contents: read
+    name: Build and Deploy Job
     steps:
-      - name: Workflow Disabled
-        run: echo "This workflow is disabled. Use Azure App Service deployment instead."
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
+        lfs: false
+    
+    - name: Setup Python for Azure Functions
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install Azure Functions dependencies
+      run: |
+        cd api
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Build And Deploy
+      id: builddeploy
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_PEBBLE_077934D03 }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+        action: "upload"
+        ###### Repository/Build Configurations ######
+        app_location: "/" # App source code path
+        api_location: "api" # Api source code path - optional
+        output_location: "/" # Built app content directory - optional
+        ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
-    if: false # DISABLED - workflow is disabled
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
-    name: Close Pull Request Job (DISABLED)
+    name: Close Pull Request Job
     steps:
-      - name: Workflow Disabled
-        run: echo "This workflow is disabled. Use Azure App Service deployment instead."
+    - name: Close Pull Request
+      id: closepullrequest
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_PEBBLE_077934D03 }}
+        action: "close"
