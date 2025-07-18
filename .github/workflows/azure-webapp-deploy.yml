@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python app to Azure Web App - volvo-mdc-dzfzd3fehwegc4es
+name: Build and deploy Python app to Azure Web App - VOLVO-MDC
 
 on:
   push:
@@ -63,6 +63,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: 'volvo-mdc-dzfzd3fehwegc4es'
+          app-name: 'VOLVO-MDC'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F401DC2E7C6542B7B6E7D8AC555F64A5 }}
