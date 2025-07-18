@@ -12,6 +12,7 @@ env:
   DOCKER_IMAGE_NAME: volvo-dmc-generator
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/volvo-dmc-generator
+  AZURE_RESOURCE_GROUP: rg-volvo-dmc-generator
 
 jobs:
   build:
