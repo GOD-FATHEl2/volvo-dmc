@@ -1,0 +1,55 @@
+name: Test Dependencies
+
+on:
+  workflow_dispatch: # Only run manually for testing
+  
+jobs:
+  test-dependencies:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libdmtx0b libdmtx-dev
+        
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install minimal Python dependencies
+      run: |
+        pip install Flask flask-cors pylibdmtx Pillow pandas openpyxl
+        
+    - name: Test dependencies
+      run: |
+        python test_dependencies.py
+        
+    - name: Test DMC generation
+      run: |
+        python -c "
+        from pylibdmtx.pylibdmtx import encode, decode
+        import sys
+        
+        # Test encode
+        data = b'Hello VOLVO'
+        encoded = encode(data)
+        if encoded:
+            print('✅ DMC encode successful')
+        else:
+            print('❌ DMC encode failed')
+            sys.exit(1)
+            
+        # Test decode
+        decoded = decode(encoded)
+        if decoded and decoded[0].data == data:
+            print('✅ DMC decode successful')
+        else:
+            print('❌ DMC decode failed')
+            sys.exit(1)
+            
+        print('🎉 All DMC tests passed!')
+        "
