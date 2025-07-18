@@ -1,55 +1,74 @@
-# Byte-compiled / cache
+# Python
 __pycache__/
 *.py[cod]
-*.pyo
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Virtual environment
+# Virtual environments
 venv/
 env/
 ENV/
-.venv/
-.Python
+env.bak/
+venv.bak/
 
-# Flask instance folder
+# Flask
 instance/
-.env
-.env.*
+.webassets-cache
 
-# VS Code settings
-.vscode/
+# Database
+*.db
+*.sqlite3
 
-# macOS
+# Logs
+*.log
+logs/
+
+# OS
 .DS_Store
-
-# Windows
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# Log files
-*.log
-
-# Excel/PDF exports (optional - uncomment if you don't want to track exports)
-# *.xlsx
-# *.pdf
-
-# Generated DMC images (optional - uncomment if you don't want to track generated images)
-# backend/static/qrs/
-# backend/static/Export_*.pdf
-# backend/static/Export_*.xlsx
-
-# Database file (uncomment if you want to start with a fresh database)
-# backend/database.json
-
-# Development files
-*.tmp
-*.temp
-.pytest_cache/
-.coverage
-
-# IDE files
+# IDE
+.vscode/
+.idea/
 *.swp
 *.swo
 *~
 
-# Backup files
-*.bak
-*.backup
+# Generated files
+backend/static/qrs/*.png
+backend/static/qrs/*.jpg
+backend/static/qrs/*.jpeg
+backend/static/Export_*.pdf
+backend/database.json
+
+# Deployment
+.deployment
+.azure/
+node_modules/
+
+# Test files
+test_*.py
+*_test.py
+test_dmc.png
