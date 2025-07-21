@@ -22,6 +22,11 @@ CORS(app)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "qrs")
 LOG_FILE = os.path.join(BASE_DIR, "database.json")
+TEMPLATE_FOLDER = os.path.join(BASE_DIR, "templates")
+STATIC_FOLDER = os.path.join(BASE_DIR, "static")
+
+app = Flask(__name__, template_folder=TEMPLATE_FOLDER, static_folder=STATIC_FOLDER)
+CORS(app)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 

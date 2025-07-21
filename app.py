@@ -14,8 +14,8 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 backend_dir = os.path.join(current_dir, 'backend')
 sys.path.insert(0, backend_dir)
 
-# Change working directory to backend for proper file access
-os.chdir(backend_dir)
+# Don't change working directory - keep it at root for Azure Web App
+# os.chdir(backend_dir)  # Commented out to avoid path issues
 
 # Import Flask app from backend directory
 import backend.main as backend_main
@@ -23,15 +23,17 @@ app = backend_main.app
 
 if __name__ == "__main__":
     print("🚀 Starting VOLVO DMC Generator...")
-    print("📍 Server will be available at: http://localhost:5000")
-    print("🔧 Development mode enabled")
+    # Get port from environment variable (Azure sets this)
+    port = int(os.environ.get('PORT', 8000))
+    print(f"📍 Server will be available on port: {port}")
+    print("🔧 Production mode enabled for Azure")
     print("© 2025 VOLVO Cars. All rights reserved. Made by: Nawoar Ekkou")
     print("=" * 50)
     
-    # Run in development mode
+    # Run in production mode for Azure
     app.run(
-        debug=True,
+        debug=False,
         host="0.0.0.0",
-        port=5000,
+        port=port,
         threaded=True
     )

@@ -4,7 +4,7 @@
 # This script ensures the Flask app starts correctly on Azure Web App
 
 # Set environment variables
-export FLASK_APP=main.py
+export FLASK_APP=app.py
 export FLASK_ENV=production
 export PYTHONPATH=/home/site/wwwroot:/home/site/wwwroot/backend
 
@@ -17,4 +17,4 @@ python -m pip install -r requirements.txt
 
 # Start the Flask application with Gunicorn
 echo "Starting VOLVO DMC Generator on Azure Web App..."
-gunicorn --bind 0.0.0.0:$PORT --workers 4 --timeout 120 main:app
+gunicorn --bind 0.0.0.0:$PORT --workers 4 --timeout 120 app:app
