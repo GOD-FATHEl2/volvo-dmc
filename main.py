@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+VOLVO DMC Generator - Main Entry Point
+Direct Flask application entry point for local development
+
+© 2025 VOLVO Cars. All rights reserved. Made by: Nawoar Ekkou
+"""
 import os
 import sys
 
@@ -11,6 +17,12 @@ import backend.main
 app = backend.main.app
 
 if __name__ == "__main__":
+    print("🚀 Starting VOLVO DMC Generator (main.py)...")
     port = int(os.environ.get('PORT', 8000))
-    # Run the Flask app
-    app.run(host='0.0.0.0', port=port, debug=False)
+    print(f"📍 Server will be available on port: {port}")
+    print("🔧 Local development mode")
+    print("© 2025 VOLVO Cars. All rights reserved. Made by: Nawoar Ekkou")
+    print("=" * 50)
+    
+    # Run the Flask app in debug mode for local development
+    app.run(host='0.0.0.0', port=port, debug=True, threaded=True)

@@ -12,7 +12,8 @@ from flask import Flask, request, jsonify, send_file, send_from_directory, rende
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from generate_qr import generate_dmc_code
-from read_dmc import read_dmc_from_bytes
+# from read_dmc import read_dmc_from_bytes  # Original detection
+from dmc_detection_hybrid import read_dmc_hybrid  # New hybrid detection
 import io
 
 app = Flask(__name__)
@@ -123,7 +124,7 @@ def read_dmc():
         image_data = io.BytesIO(file.read())
         
         # Decode the DMC code
-        decoded_text = read_dmc_from_bytes(image_data)
+        decoded_text = read_dmc_hybrid(image_data)
         
         if decoded_text:
             # Log the read operation
@@ -161,24 +162,42 @@ def read_dmc_camera():
     Read DMC code from camera capture (base64 image data)
     """
     try:
+        # Log incoming request for debugging
+        print(f"Camera read request received. Content-Type: {request.content_type}")
+        
         data = request.json
-        if not data or 'image' not in data:
+        if not data:
+            print("Error: No JSON data received")
+            return jsonify({"error": "No JSON data provided"}), 400
+            
+        if 'image' not in data:
+            print("Error: No 'image' field in JSON data")
+            print(f"Available fields: {list(data.keys())}")
             return jsonify({"error": "No image data provided"}), 400
         
         # Extract base64 image data
         image_data = data['image']
+        print(f"Image data length: {len(image_data)} characters")
         
         # Remove data URL prefix if present (data:image/png;base64,)
         if image_data.startswith('data:image'):
             image_data = image_data.split(',')[1]
+            print("Removed data URL prefix")
         
         # Decode base64 to bytes
         import base64
-        image_bytes = base64.b64decode(image_data)
+        try:
+            image_bytes = base64.b64decode(image_data)
+            print(f"Successfully decoded base64. Image bytes length: {len(image_bytes)}")
+        except Exception as decode_error:
+            print(f"Base64 decode error: {decode_error}")
+            return jsonify({"error": f"Invalid base64 image data: {str(decode_error)}"}), 400
+        
         image_stream = io.BytesIO(image_bytes)
         
         # Decode the DMC code
-        decoded_text = read_dmc_from_bytes(image_stream)
+        decoded_text = read_dmc_hybrid(image_stream)
+        print(f"DMC decode result: {decoded_text}")
         
         if decoded_text:
             # Log the read operation
@@ -205,10 +224,59 @@ def read_dmc_camera():
                 "timestamp": str(now)
             })
         else:
+            print("No DMC code found in camera image")
             return jsonify({"error": "No DMC code found in camera image"}), 400
             
     except Exception as e:
-        return jsonify({"error": f"Error processing camera image: {str(e)}"}), 500
+        error_msg = f"Error processing camera image: {str(e)}"
+        print(f"Camera processing error: {error_msg}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": error_msg}), 500
+
+@app.route("/test_qr")
+def test_qr():
+    """
+    Generate a test QR code for camera testing
+    """
+    try:
+        import qrcode
+        import base64
+        
+        # Generate a simple test QR code using qrcode directly
+        test_data = "VOLVO-TEST-12345"
+        
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(test_data)
+        qr.make(fit=True)
+        
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Convert to base64
+        buffer = io.BytesIO()
+        img.save(buffer, 'PNG')
+        buffer.seek(0)
+        base64_string = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        base64_img = f"data:image/png;base64,{base64_string}"
+        
+        return f"""
+        <html>
+        <head><title>Test QR Code</title></head>
+        <body style="text-align: center; font-family: Arial;">
+            <h2>🧪 Test QR Code for Camera</h2>
+            <p>Use this QR code to test your camera scanner:</p>
+            <div style="border: 2px solid #333; display: inline-block; padding: 20px; margin: 20px;">
+                <img src="{base64_img}" style="width: 200px; height: 200px;" />
+            </div>
+            <p><strong>Data:</strong> {test_data}</p>
+            <p>📱 Point your camera at this QR code to test detection</p>
+            <a href="/">← Back to VOLVO DMC Generator</a>
+        </body>
+        </html>
+        """
+            
+    except Exception as e:
+        return f"Error: {str(e)}", 500
 
 @app.route("/qrs/<path:filename>")
 def get_qr(filename):

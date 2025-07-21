@@ -1,4 +1,6 @@
-let BASE = "http://127.0.0.1:5000"; // Local development server
+// Dynamically set BASE URL to current host and port
+let BASE = `${window.location.protocol}//${window.location.host}`;
+console.log("Using BASE URL:", BASE);
 let cameraStream = null;
 let isScanning = false;
 let scanStartTime = Date.now();
@@ -357,13 +359,13 @@ function stopScannerCamera() {
 function startContinuousScanning() {
   if (!isScanning || !cameraStream) return;
   
-  // Capture and scan every 1.5 seconds
+  // Capture and scan every 2.5 seconds (less aggressive)
   setTimeout(() => {
     if (isScanning) {
       captureScannerImage();
       startContinuousScanning(); // Continue scanning
     }
-  }, 1500);
+  }, 2500);
 }
 
 async function captureScannerImage() {
@@ -394,53 +396,65 @@ async function captureScannerImage() {
       body: JSON.stringify({ image: imageData })
     });
 
-    const result = await res.json();
+    console.log(`Camera scan response: ${res.status} ${res.statusText}`);
 
-    if (result.success) {
-      // DETECTION POINT - STOP SCANNING AND SHOW RESULTS
-      isScanning = false;
-      stopScannerCamera();
+    if (res.ok) {
+      const result = await res.json();
       
-      // Add to history
-      addToCameraHistory(result);
-      
-      // Update visual feedback
-      const scanFrame = document.querySelector('.scanner-overlay-frame .scan-frame');
-      if (scanFrame) {
-        scanFrame.style.borderColor = '#34c759';
-        scanFrame.style.boxShadow = '0 0 0 2000px rgba(52, 199, 89, 0.3)';
+      if (result.success) {
+        // DETECTION POINT - STOP SCANNING AND SHOW RESULTS
+        isScanning = false;
+        stopScannerCamera();
+        
+        // Add to history
+        addToCameraHistory(result);
+        
+        // Update visual feedback
+        const scanFrame = document.querySelector('.scanner-overlay-frame .scan-frame');
+        if (scanFrame) {
+          scanFrame.style.borderColor = '#34c759';
+          scanFrame.style.boxShadow = '0 0 0 2000px rgba(52, 199, 89, 0.3)';
+        }
+        
+        updateScannerStatus("✅ DMC Code Detected!", "success");
+        
+        // Show results
+        const resultDiv = document.getElementById('scanner-result');
+        resultDiv.style.display = 'block';
+        resultDiv.className = 'scanner-result success';
+        resultDiv.innerHTML = `
+          <h4>🎯 DMC CODE DETECTED!</h4>
+          <div class="detected-code">
+            <p class="code-value">${result.decoded_text}</p>
+          </div>
+          <p><strong>📷 Source:</strong> Live Camera Scan</p>
+          <p><strong>⏰ Time:</strong> ${new Date(result.timestamp).toLocaleString()}</p>
+          <p><strong>🔍 Duration:</strong> ${(Date.now() - scanStartTime) / 1000}s</p>
+          <div class="result-actions">
+            <button onclick="startScannerCamera()" class="action-btn scan-again-btn">🔄 Scan Again</button>
+            <button onclick="copyToClipboard('${result.decoded_text}')" class="action-btn copy-code-btn">📋 Copy</button>
+            <button onclick="showCameraHistory()" class="action-btn history-btn">📚 History</button>
+          </div>
+        `;
+        
+        // Play success sound
+        playDetectionSound();
+        
+        // Refresh main history
+        loadHistory();
       }
+    } else {
+      // Handle HTTP error responses (400, 500, etc.)
+      const errorResult = await res.json();
+      console.warn(`Camera scan error ${res.status}:`, errorResult.error);
       
-      updateScannerStatus("✅ DMC Code Detected!", "success");
-      
-      // Show results
-      const resultDiv = document.getElementById('scanner-result');
-      resultDiv.style.display = 'block';
-      resultDiv.className = 'scanner-result success';
-      resultDiv.innerHTML = `
-        <h4>🎯 DMC CODE DETECTED!</h4>
-        <div class="detected-code">
-          <p class="code-value">${result.decoded_text}</p>
-        </div>
-        <p><strong>📷 Source:</strong> Live Camera Scan</p>
-        <p><strong>⏰ Time:</strong> ${new Date(result.timestamp).toLocaleString()}</p>
-        <p><strong>🔍 Duration:</strong> ${(Date.now() - scanStartTime) / 1000}s</p>
-        <div class="result-actions">
-          <button onclick="startScannerCamera()" class="action-btn scan-again-btn">🔄 Scan Again</button>
-          <button onclick="copyToClipboard('${result.decoded_text}')" class="action-btn copy-code-btn">📋 Copy</button>
-          <button onclick="showCameraHistory()" class="action-btn history-btn">📚 History</button>
-        </div>
-      `;
-      
-      // Play success sound
-      playDetectionSound();
-      
-      // Refresh main history
-      loadHistory();
+      // Update status to show scanning continues
+      updateScannerStatus("🔍 Scanning for DMC codes...", "scanning");
     }
   } catch (error) {
-    console.error('Scan error:', error);
-    // Continue scanning on error (silent fail for network issues)
+    console.error('Network error during camera scan:', error);
+    // Continue scanning on network error (silent fail)
+    updateScannerStatus("🔍 Scanning for DMC codes...", "scanning");
   }
 }
 
