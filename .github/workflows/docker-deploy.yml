@@ -32,9 +32,9 @@ jobs:
         
     - name: 📦 Update Azure Container App
       run: |
-        az containerapp update 
-          --name volvo-dmc-app 
-          --resource-group app-7592-online-nonprod-001 
+        az containerapp update \
+          --name volvo-dmc-app \
+          --resource-group app-7592-online-nonprod-001 \
           --image ${{ secrets.AZURE_ACR_LOGIN_SERVER }}/${{ secrets.AZURE_ACR_REPO_NAME }}:latest
         
     - name: ✅ Deployment complete
