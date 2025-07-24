@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  volvo-dmc:
+    build: .
+    container_name: volvo_dmc
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - FLASK_ENV=production
+      - PYTHONPATH=/app
+    volumes:
+      - ./backend/static/qrs:/app/backend/static/qrs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  default:
+    name: volvo-dmc-network

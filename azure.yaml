@@ -8,10 +8,13 @@ infra:
   provider: bicep
 
 services:
-  volvo-dmc-app:
-    project: .
+  volvo-dmc-api:
+    project: ./
+    host: containerapp  
     language: python
-    host: containerapp
+    docker:
+      path: Dockerfile
+      context: ./
 
 hooks:
   preprovision:

@@ -1,0 +1,41 @@
+{
+    "name": "VOLVO DMC Generator",
+    "image": "mcr.microsoft.com/devcontainers/python:3.11",
+    
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "configureZshAsDefaultShell": true,
+            "username": "vscode"
+        }
+    },
+    
+    "onCreateCommand": "sudo apt-get update && sudo apt-get install -y libzbar0 libzbar-dev libgl1-mesa-glx libglib2.0-0 libsm6 libxext6 libxrender-dev libgomp1",
+    
+    "postCreateCommand": "pip install -r deploy/requirements.txt",
+    
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.flake8",
+                "ms-python.pylint",
+                "ms-vscode.vscode-json"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "python.terminal.activateEnvironment": true
+            }
+        }
+    },
+    
+    "forwardPorts": [8000],
+    "portsAttributes": {
+        "8000": {
+            "label": "VOLVO DMC Generator",
+            "onAutoForward": "notify"
+        }
+    },
+    
+    "postStartCommand": "echo '🚀 VOLVO DMC Generator is ready! Run: cd deploy && python main.py'"
+}
