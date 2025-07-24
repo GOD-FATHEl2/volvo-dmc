@@ -2,6 +2,8 @@
 
 A professional Data Matrix Code (DMC) generator built with Flask for VOLVO manufacturing processes.
 
+🚀 **Now with automated Azure Container Apps deployment!**
+
 ## Features
 
 - Industrial-grade DMC Generation: Generate Data Matrix codes with pylibdmtx
