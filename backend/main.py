@@ -1,5 +1,32 @@
 """
-VOLVO DMC Generator - Flask Backend Application
+VOimport os
+import sys
+import json
+import datetime
+from flask import Flask, request, jsonify, send_file, send_from_directory, render_template
+from flask_cors import CORS
+from werkzeug.utils import secure_filename
+
+# Add current directory to path for imports
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
+
+# Import local modules
+from generate_qr import generate_dmc_code
+
+# Optional imports with fallbacks
+try:
+    from read_dmc import read_dmc_from_bytes
+except ImportError:
+    read_dmc_from_bytes = None
+    print("⚠️ read_dmc module not available")
+    
+try:
+    from dmc_detection_hybrid import detect_dmc_codes
+except ImportError:
+    detect_dmc_codes = None
+    print("⚠️ dmc_detection_hybrid module not available")enerator - Flask Backend Application
 Professional Data Matrix Code generator for VOLVO manufacturing processes
 
 © 2025 VOLVO Cars. All rights reserved. Made by: Nawoar Ekkou
