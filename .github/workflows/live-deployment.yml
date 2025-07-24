@@ -1,0 +1,54 @@
+name: 🌐 VOLVO DMC - Multi-User Online Deployment
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  REGISTRY: nawoar.azurecr.io
+  IMAGE_NAME: volvo-dmc
+  RESOURCE_GROUP: app-7592-online-nonprod-001
+  CONTAINER_APP: volvo-dmc-app
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+
+    - name: 🔑 Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: |
+          {
+            "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
+            "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
+            "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
+            "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
+          }
+
+    - name: 🔐 Login to Container Registry
+      run: |
+        echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ env.REGISTRY }} -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+
+    - name: 🏗️ Build & Push Docker Image
+      run: |
+        docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest .
+        docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+    - name: 🚀 Deploy to Container App
+      run: |
+        az containerapp update \
+          --name ${{ env.CONTAINER_APP }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+    - name: ✅ Deployment Success
+      run: |
+        echo "🎉 VOLVO DMC is now LIVE for multiple users!"
+        echo "🌐 URL: https://volvo-dmc-app.braveground-410ffbbc.swedencentral.azurecontainerapps.io/"
+        echo "👥 Ready for global access!"
+        echo "🔑 Login: admin/admin"
