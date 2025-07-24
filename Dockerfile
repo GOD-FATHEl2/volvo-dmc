@@ -4,15 +4,11 @@ FROM python:3.11-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies for pylibdmtx and other native libraries
+# Install system dependencies for image processing
 RUN apt-get update && apt-get install -y \
-    libdmtx0b \
-    libdmtx-dev \
     libzbar0 \
-    libzbar-dev \
     gcc \
     g++ \
-    pkg-config \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
@@ -29,18 +25,13 @@ RUN mkdir -p backend/static/qrs && \
     touch backend/database.json && \
     chmod 666 backend/database.json
 
-# Create a non-root user for security
-RUN groupadd -r appuser && useradd -r -g appuser appuser
-RUN chown -R appuser:appuser /app
-USER appuser
-
 # Expose port
 EXPOSE 8000
 
 # Set environment variables
 ENV FLASK_APP=main.py
 ENV FLASK_ENV=production
-ENV PYTHONPATH=/app/backend:/app
+ENV PYTHONPATH=/app:/app/backend
 ENV PYTHONUNBUFFERED=1
 
 # Health check
@@ -48,4 +39,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:8000/ || exit 1
 
 # Run the application with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "120", "--worker-class", "sync", "--chdir", "/app", "main:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "120", "main:app"]
