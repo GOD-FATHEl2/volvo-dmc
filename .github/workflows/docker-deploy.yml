@@ -1,50 +1,44 @@
-name: Build and Push VOLVO DMC to ACR
+name: 🚀 Deploy VOLVO DMC to Azure Container Apps
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # Allow manual trigger
+  workflow_dispatch:
 
 jobs:
-  build-and-push:
+  deploy:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
+    - name: 📥 Checkout code
       uses: actions/checkout@v4
-
-    - name: Log in to ACR
-      run: |
-        echo "${{ secrets.AZURE_ACR_PASSWORD }}" | docker login ${{ secrets.AZURE_ACR_LOGIN_SERVER }} -u ${{ secrets.AZURE_ACR_USERNAME }} --password-stdin
-
-    - name: Build Docker image
+      
+    - name: 🔐 Log in to Azure Container Registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.AZURE_ACR_LOGIN_SERVER }}
+        username: ${{ secrets.AZURE_ACR_USERNAME }}
+        password: ${{ secrets.AZURE_ACR_PASSWORD }}
+        
+    - name: 🐳 Build and push Docker image
       run: |
         docker build -t ${{ secrets.AZURE_ACR_LOGIN_SERVER }}/${{ secrets.AZURE_ACR_REPO_NAME }}:latest .
-
-    - name: Push Docker image to ACR
-      run: |
         docker push ${{ secrets.AZURE_ACR_LOGIN_SERVER }}/${{ secrets.AZURE_ACR_REPO_NAME }}:latest
-
-    - name: Update Container App
-      run: |
-        # Install Azure CLI
-        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
         
-        # Login to Azure using service principal
-        az login --service-principal \
-          --username ${{ secrets.AZURE_CLIENT_ID }} \
-          --password ${{ secrets.AZURE_CLIENT_SECRET }} \
-          --tenant ${{ secrets.AZURE_TENANT_ID }}
+    - name: ☁️ Log in to Azure CLI
+      uses: azure/login@v1
+      with:
+        creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
         
-        # Update Container App
-        az containerapp update \
-          --name volvo-dmc-app \
-          --resource-group nawoar \
-          --image ${{ secrets.AZURE_ACR_LOGIN_SERVER }}/${{ secrets.AZURE_ACR_REPO_NAME }}:latest \
-          --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-    - name: Display success message
+    - name: 📦 Update Azure Container App
       run: |
-        echo "🎉 VOLVO DMC successfully deployed!"
-        echo "📱 Access your app at: https://volvo-dmc-app.braveground-410ffbbc.swedencentral.azurecontainerapps.io/"
+        az containerapp update 
+          --name volvo-dmc-app 
+          --resource-group app-7592-online-nonprod-001 
+          --image ${{ secrets.AZURE_ACR_LOGIN_SERVER }}/${{ secrets.AZURE_ACR_REPO_NAME }}:latest
+        
+    - name: ✅ Deployment complete
+      run: |
+        echo "🎉 VOLVO DMC deployed successfully!"
+        echo "🌐 Access your app at: https://volvo-dmc-app.braveground-410ffbbc.swedencentral.azurecontainerapps.io/"
         echo "🔑 Login with: admin/admin"
