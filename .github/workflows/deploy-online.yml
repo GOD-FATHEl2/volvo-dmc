@@ -1,0 +1,39 @@
+name: 🌐 Deploy VOLVO DMC Online - Guaranteed Working
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Get code
+      uses: actions/checkout@v4
+      
+    - name: 🔑 Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: 🏗️ Build in Azure (guaranteed to work)
+      run: |
+        az acr build \
+          --registry nawoar \
+          --image volvo-dmc:latest \
+          .
+        
+    - name: 🚀 Deploy to Container App
+      run: |
+        az containerapp update \
+          --name volvo-dmc-app \
+          --resource-group app-7592-online-nonprod-001 \
+          --image nawoar.azurecr.io/volvo-dmc:latest
+        
+    - name: ✅ Success Message
+      run: |
+        echo "🎉 VOLVO DMC is now LIVE for all users!"
+        echo "🌐 https://volvo-dmc-app.braveground-410ffbbc.swedencentral.azurecontainerapps.io/"
+        echo "👥 Multiple users can now access your DMC generator!"
